@@ -26,7 +26,7 @@ export default function Home() {
     id: '021151065541654064651651654654',
     title: 'Eu odeio acordar cedo',
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg',
-    url: 'https://alurakut-base-six.vercel.app/'
+    url: 'https://alurakut.fabiotakamura.vercel.app/'
   }]);
   console.log('nosso teste', comunidades);
   // const comunidades = ['Alurakut'];
