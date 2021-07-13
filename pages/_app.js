@@ -11,6 +11,8 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: sans-serif;
+    background-image: url("https://www.gamereactor.eu/media/39/octopathtravelerpc_2863903b.jpg");
+    background-size: cover;
     background-color: #D9E6F6;
   }
 
