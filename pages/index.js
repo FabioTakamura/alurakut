@@ -20,6 +20,29 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+function ProfileRelationsBox(propriedades) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+
+      <ul>
+        {propriedades.items.slice(0,6).map((itemAtual) => {
+          return (
+            <li key={itemAtual.id}>
+              <a href={itemAtual.html_url}>
+              <img src={itemAtual.avatar_url} />
+              <span>{itemAtual.login}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
   const usuarioAlaetatorio = 'FabioTakamura';
   const [comunidades, setComunidades] = React.useState([{
@@ -40,9 +63,20 @@ export default function Home() {
     'maluko',
     'jao',
   ];
-  // Limitar os Amigos e Comundiades em 6 - o slice recebe como parametros, o inicio e o fim -
-  const comunidadesMaxSeis = comunidades.slice(0, 6);
-  const amigosMaxSeis = pessoasFavoritas.slice(0, 6);
+
+  const [seguidores, setSeguidores] = React.useState([]);
+  // Peagr array de dados do github
+  React.useEffect(function() {
+    fetch('https://api.github.com/users/peas/followers')
+    .then(function (respostaDOServidor) {
+      return respostaDOServidor.json();
+    }) 
+    .then(function (respostaCompleta) {
+      setSeguidores(respostaCompleta);
+      console.log(respostaCompleta);
+    })
+  }, []);
+
 
   return (
     <>
@@ -116,7 +150,7 @@ export default function Home() {
             </h2>
 
             <ul>
-              {amigosMaxSeis.map((itemAtual) => {
+              {pessoasFavoritas.slice(0,6).map((itemAtual) => {
                 return (
                   <li key={itemAtual}>
                     <a href={`/users/${itemAtual}`} key={itemAtual}>
@@ -135,7 +169,7 @@ export default function Home() {
             </h2>
 
             <ul>
-              {comunidadesMaxSeis.map((itemAtual) => {
+              {comunidades.slice(0,6).map((itemAtual) => {
                 return (
                   <li key={itemAtual.id}>
                     <a href={`${itemAtual.url}`} key={itemAtual.title}>
@@ -147,6 +181,8 @@ export default function Home() {
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
+
+          <ProfileRelationsBox title="Seguidores" items={seguidores} />
 
         </div>
 
