@@ -45,13 +45,7 @@ function ProfileRelationsBox(propriedades) {
 
 export default function Home() {
   const usuarioAlaetatorio = 'FabioTakamura';
-  const [comunidades, setComunidades] = React.useState([{
-    id: '021151065541654064651651654654',
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg',
-    url: 'https://alurakut.fabiotakamura.vercel.app/'
-  }]);
-  console.log('nosso teste', comunidades);
+  const [comunidades, setComunidades] = React.useState([]);
   // const comunidades = ['Alurakut'];
   const amigos = [
     'juunegreiros',
@@ -75,6 +69,38 @@ export default function Home() {
       setSeguidores(respostaCompleta);
       console.log(respostaCompleta);
     })
+
+    // API GraphQL
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': '97b704b5b542e065723ef8c5030f2a',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({"query": `query {
+        allCommunities {
+          title
+          id
+          imageUrl
+          url
+          creatorSlug
+        }
+      }` })
+    })
+    .then((response) => response.json()) //Pega o retorno do response.json() e já retorna
+    .then((respostaCompleta) => {
+      const comunidadesVindasDoDato = respostaCompleta.data.allCommunities;
+      console.log(comunidadesVindasDoDato)
+      setComunidades(comunidadesVindasDoDato)
+    })
+
+      /* Isso acima é igual a isso
+        .then(function (response) {
+          return response.json()
+        })
+      */
+
   }, []);
 
 
@@ -99,20 +125,28 @@ export default function Home() {
             <form onSubmit={function handleCriaComunidade(e) {
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
-              console.log('Campo:', dadosDoForm.get('title'));
-              console.log('Campo:', dadosDoForm.get('image'));
-              console.log('Campo:', dadosDoForm.get('url'));
-
+              
               const comunidade = {
-                id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
-                image: dadosDoForm.get('image'),
+                imageUrl: dadosDoForm.get('imageUrl'),
                 url: dadosDoForm.get('url'),
+                creatorSlug: usuarioAlaetatorio,
               }
-
-              // comunidades.push('Alura Stars');
-              const comunidadesAtualizadas = [...comunidades, comunidade];
-              setComunidades(comunidadesAtualizadas)
+              
+              fetch('/api/comunidades', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(comunidade)
+              })
+              .then(async (response) => {
+                const dados = await response.json();
+                console.log(dados.registroCriado);
+                const comunidade = dados.registroCriado;
+                const comunidadesAtualizadas = [...comunidades, comunidade];
+                setComunidades(comunidadesAtualizadas)
+              })
             }}>
               <div>
                 <input 
@@ -123,7 +157,7 @@ export default function Home() {
                 />
                 <input 
                   placeholder="Coloque uma URL para usar de capa." 
-                  name="image" 
+                  name="imageUrl" 
                   aria-label="Coloque uma URL para usar de capa." 
                 />
                 <input 
@@ -172,8 +206,8 @@ export default function Home() {
               {comunidades.slice(0,6).map((itemAtual) => {
                 return (
                   <li key={itemAtual.id}>
-                    <a href={`${itemAtual.url}`} key={itemAtual.title}>
-                      {<img src={itemAtual.image} />}
+                    <a href={`${itemAtual.url}`}>
+                      {<img src={itemAtual.imageUrl} />}
                       <span>{`${itemAtual.title}`}</span>
                     </a>
                   </li>
