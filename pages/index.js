@@ -53,7 +53,7 @@ export default function Home() {
   }]);
   console.log('nosso teste', comunidades);
   // const comunidades = ['Alurakut'];
-  const pessoasFavoritas = [
+  const amigos = [
     'juunegreiros',
     'omariosouto',
     'peas',
@@ -146,16 +146,16 @@ export default function Home() {
 
         <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
-              Amigos ({pessoasFavoritas.length})
+              Amigos ({amigos.length})
             </h2>
 
             <ul>
-              {pessoasFavoritas.slice(0,6).map((itemAtual) => {
+              {amigos.slice(0,6).map((itemAtual) => {
                 return (
                   <li key={itemAtual}>
-                    <a href={`/users/${itemAtual}`} key={itemAtual}>
-                    <img src={`https://github.com/${itemAtual}.png`} />
-                    <span>{itemAtual}</span>
+                    <a href={`https://github.com/${itemAtual}`} key={itemAtual}>
+                      <img src={`https://github.com/${itemAtual}.png`} />
+                      <span>{itemAtual}</span>
                     </a>
                   </li>
                 )
@@ -173,8 +173,8 @@ export default function Home() {
                 return (
                   <li key={itemAtual.id}>
                     <a href={`${itemAtual.url}`} key={itemAtual.title}>
-                    {<img src={itemAtual.image} />}
-                    <span>{`${itemAtual.title}`}</span>
+                      {<img src={itemAtual.image} />}
+                      <span>{`${itemAtual.title}`}</span>
                     </a>
                   </li>
                 )
