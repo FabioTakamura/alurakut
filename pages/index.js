@@ -1,4 +1,6 @@
 import React from 'react';
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
@@ -43,8 +45,8 @@ function ProfileRelationsBox(propriedades) {
   )
 }
 
-export default function Home() {
-  const usuarioAlaetatorio = 'FabioTakamura';
+export default function Home(props) {
+  const usuarioAlaetatorio = props.githubUser;
   const [comunidades, setComunidades] = React.useState([]);
   // const comunidades = ['Alurakut'];
   const amigos = [
@@ -80,8 +82,8 @@ export default function Home() {
       },
       body: JSON.stringify({"query": `query {
         allCommunities {
-          title
           id
+          title
           imageUrl
           url
           creatorSlug
@@ -132,6 +134,7 @@ export default function Home() {
                 url: dadosDoForm.get('url'),
                 creatorSlug: usuarioAlaetatorio,
               }
+              console.log(comunidade);
               
               fetch('/api/comunidades', {
                 method: 'POST',
@@ -223,4 +226,36 @@ export default function Home() {
       </MainGrid>
     </>
   )
+}
+
+export async function getServerSideProps(ctx) {
+  const cookies = nookies.get(ctx);
+  const token = cookies.USER_TOKEN;
+  const decodedToken = jwt.decode(token);
+  const githubUser = decodedToken?.githubUser;
+
+  console.log('Token', jwt.decode(token))
+
+  if (!githubUser) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  // const followers = await fetch(`https://api.github.com/users/${githubUser}/followers`)
+  //   .then((res) => res.json())
+  //   .then(followers => followers.map((follower) => ({
+  //     id: follower.id,
+  //     name: follower.login,
+  //     image: follower.avatar_url,
+  //   })));
+
+  return {
+    props: {
+      githubUser,
+    }
+  }
 }

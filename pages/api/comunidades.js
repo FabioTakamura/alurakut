@@ -3,16 +3,16 @@ import { SiteClient } from 'datocms-client';
 export default async function recebedorDeRequests(requests, response) {
 
     if(requests.method === 'POST') {
-        const TOKEN = '95043ab6d336810508e50aa99533cb';
+        const TOKEN = '97b704b5b542e065723ef8c5030f2a';
         const client = new SiteClient(TOKEN);
     
         const registroCriado = await client.items.create({
             itemType: "968036", //ID do model de 'comunities' criado pelo DATO
-            ...request.body,
-            // title: "Teste",
-            // imageUrl: "http://www.moreno.pe.gov.br/portal2/images/phocagallery/galeria2/thumbs/phoca_thumb_l_image03_grd.png",
-            // url: "http://www.moreno.pe.gov.br/portal2/images/phocagallery/galeria2/thumbs/phoca_thumb_l_image03_grd.png",
-            // creatorSlug: "FabioTakamura",
+            // ...request.body,
+            title: "Pinguim",
+            imageUrl: "https://news.microsoft.com/wp-content/uploads/prod/sites/42/2020/09/MS_Penguin-Counting-Story_1900x800-1600x674-1-960x629.jpg",
+            url: "https://news.microsoft.com/wp-content/uploads/prod/sites/42/2020/09/MS_Penguin-Counting-Story_1900x800-1600x674-1-960x629.jpg",
+            creatorSlug: "FabioTakamura",
         })
     
         console.log(registroCriado);
